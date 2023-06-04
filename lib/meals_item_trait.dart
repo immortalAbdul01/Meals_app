@@ -15,7 +15,7 @@ class ItemDetails extends StatelessWidget {
           color: Colors.white,
         ),
         const SizedBox(
-          width: 10,
+          width: 2,
         ),
         Text(
           label,

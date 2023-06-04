@@ -3,10 +3,12 @@ import 'package:to_do/dish_details.dart';
 import 'package:to_do/models/meal_model.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:to_do/meals_item_trait.dart';
+import 'package:to_do/data/dummy_data.dart';
 
 class MealsDetails extends StatelessWidget {
-  const MealsDetails({super.key, required this.meal});
+  MealsDetails({super.key, required this.meal, required this.onHandleFav});
   final Meal meal;
+  final void Function(Meal meal, bool isFav) onHandleFav;
 
   get ComplexityText {
     return meal.complexity.name[0].toUpperCase() +
@@ -22,6 +24,7 @@ class MealsDetails extends StatelessWidget {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (ctx) => DishDetails(
               meal: meal,
+              handleFav: onHandleFav,
             )));
   }
 
@@ -68,26 +71,29 @@ class MealsDetails extends StatelessWidget {
                       const SizedBox(
                         height: 20,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ItemDetails(
-                              icon: Icons.schedule_outlined,
-                              label: '${meal.duration} min'),
-                          const SizedBox(
-                            width: 14,
-                          ),
-                          ItemDetails(icon: Icons.work, label: ComplexityText),
-                          const SizedBox(
-                            width: 14,
-                          ),
-                          ItemDetails(
-                              icon: Icons.attach_money,
-                              label: AffordabilityText),
-                          const SizedBox(
-                            width: 14,
-                          ),
-                        ],
+                      SingleChildScrollView(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            ItemDetails(
+                                icon: Icons.schedule_outlined,
+                                label: '${meal.duration} min'),
+                            const SizedBox(
+                              width: 4,
+                            ),
+                            ItemDetails(
+                                icon: Icons.work, label: ComplexityText),
+                            const SizedBox(
+                              width: 4,
+                            ),
+                            ItemDetails(
+                                icon: Icons.attach_money,
+                                label: AffordabilityText),
+                            const SizedBox(
+                              width: 4,
+                            ),
+                          ],
+                        ),
                       )
                     ],
                   ),

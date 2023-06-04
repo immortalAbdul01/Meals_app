@@ -1,15 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:to_do/models/meal_model.dart';
 
-class DishDetails extends StatelessWidget {
-  const DishDetails({super.key, required this.meal});
+class DishDetails extends StatefulWidget {
+  const DishDetails({super.key, required this.meal, required this.handleFav});
 
+  final void Function(Meal meal, bool isFav) handleFav;
   final Meal meal;
+  @override
+  State<StatefulWidget> createState() {
+    return _DishDetails(
+      meal: meal,
+      handleFav: handleFav,
+    );
+  }
+}
+
+class _DishDetails extends State<DishDetails> {
+  _DishDetails({required this.meal, required this.handleFav});
+
+  final void Function(Meal meal, bool isFav) handleFav;
+  final Meal meal;
+  var isFav = false;
+  Widget starIcon = Icon(Icons.star_purple500);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(meal.title),
+        actions: [
+          IconButton(
+              onPressed: () {
+                handleFav(meal, isFav);
+                setState(() {
+                  if (isFav) {
+                    starIcon = Icon(Icons.star_purple500);
+                    // isFav = false;
+                  } else {
+                    starIcon = Icon(Icons.star);
+                    // isFav = true;
+                  }
+                });
+              },
+              icon: starIcon)
+        ],
       ),
       body: SingleChildScrollView(
         child: (Column(children: [

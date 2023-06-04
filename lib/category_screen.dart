@@ -1,20 +1,25 @@
 import 'package:to_do/models/category_model.dart';
+import 'package:to_do/models/meal_model.dart';
 import 'package:flutter/material.dart';
 import 'package:to_do/data/dummy_data.dart';
 import 'package:to_do/meals_screen.dart';
 import 'package:to_do/widget/category_widget.dart';
 
 class CategoryScreen extends StatelessWidget {
-  const CategoryScreen({super.key});
+  const CategoryScreen({super.key, required this.handleFav});
 
+  final void Function(Meal meal, bool isFav) handleFav;
   void _selectCategory(BuildContext context, Category category) {
     final filteredmeals = dummyMeals
         .where((meal) => meal.categories.contains(category.id))
         .toList();
 
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (ctx) =>
-            MealsScreen(title: category.title, meals: filteredmeals)));
+        builder: (ctx) => MealsScreen(
+              title: category.title,
+              meals: filteredmeals,
+              handleFav: handleFav,
+            )));
   }
 
   @override
