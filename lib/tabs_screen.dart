@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:to_do/category_screen.dart';
+import 'package:to_do/data/dummy_data.dart';
 import 'package:to_do/filters_screen.dart';
 import 'package:to_do/main_drawer.dart';
 import 'package:to_do/meals_screen.dart';
 
 import 'package:to_do/models/meal_model.dart';
+
+const kIntitalFilters = {
+  Filters.glutten: false,
+  Filters.vegan: false,
+  Filters.vegetarian: false,
+  Filters.lactose: false,
+};
 
 class Tabs extends StatefulWidget {
   const Tabs({super.key});
@@ -24,7 +32,7 @@ class _Tabs extends State<Tabs> {
   }
 
   final List<Meal> _favourites = [];
-
+  Map<Filters, bool> _selectedFilters = kIntitalFilters;
   void _toogleFav(Meal meal, bool isFav) {
     isFav = _favourites.contains(meal);
     if (isFav) {
@@ -42,19 +50,42 @@ class _Tabs extends State<Tabs> {
     }
   }
 
-  void _selectString(String identifier) {
+  void _selectString(String identifier) async {
+    Navigator.of(context).pop();
     if (identifier == 'filter') {
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (ctx) => FilterScreen()));
-    } else {
-      Navigator.of(context).pop();
+      final result = await Navigator.of(context)
+          .push<Map<Filters, bool>>(MaterialPageRoute(
+              builder: (ctx) => FilterScreen(
+                    currentFilters: _selectedFilters,
+                  )));
+
+      setState(() {
+        _selectedFilters = result ?? kIntitalFilters;
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final availableMeals = dummyMeals.where((meal) {
+      if (_selectedFilters[Filters.glutten]! && !meal.isGlutenFree) {
+        return false;
+      }
+      if (_selectedFilters[Filters.vegan]! && !meal.isVegan) {
+        return false;
+      }
+      if (_selectedFilters[Filters.vegetarian]! && !meal.isVegetarian) {
+        return false;
+      }
+      if (_selectedFilters[Filters.lactose]! && !meal.isLactoseFree) {
+        return false;
+      }
+      return true;
+    }).toList();
+
     Widget activePage = CategoryScreen(
       handleFav: _toogleFav,
+      availableMeals: availableMeals,
     );
     var activePageTitle = 'Categories';
 
