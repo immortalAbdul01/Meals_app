@@ -6,9 +6,11 @@ import 'package:to_do/meals_item_trait.dart';
 import 'package:to_do/data/dummy_data.dart';
 
 class MealsDetails extends StatelessWidget {
-  MealsDetails({super.key, required this.meal, required this.onHandleFav});
+  MealsDetails({
+    super.key,
+    required this.meal,
+  });
   final Meal meal;
-  final void Function(Meal meal, bool isFav) onHandleFav;
 
   get ComplexityText {
     return meal.complexity.name[0].toUpperCase() +
@@ -24,7 +26,6 @@ class MealsDetails extends StatelessWidget {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (ctx) => DishDetails(
               meal: meal,
-              handleFav: onHandleFav,
             )));
   }
 

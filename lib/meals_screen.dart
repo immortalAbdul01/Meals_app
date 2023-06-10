@@ -3,18 +3,16 @@ import 'package:to_do/meals_details.dart';
 import 'package:to_do/models/meal_model.dart';
 
 class MealsScreen extends StatelessWidget {
-  MealsScreen(
-      {super.key, this.title, required this.meals, required this.handleFav});
+  MealsScreen({super.key, this.title, required this.meals});
   final String? title;
   final List<Meal> meals;
-  final void Function(Meal meal, bool isFav) handleFav;
+
   @override
   Widget build(BuildContext context) {
     Widget content = ListView.builder(
         itemCount: meals.length,
         itemBuilder: (ctx, index) => MealsDetails(
               meal: meals[index],
-              onHandleFav: handleFav,
             ));
 
     if (meals.isEmpty) {

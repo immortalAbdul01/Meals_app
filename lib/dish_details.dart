@@ -1,27 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:to_do/models/meal_model.dart';
+import 'package:to_do/providers/favourites_provier.dart';
 
-class DishDetails extends StatefulWidget {
-  const DishDetails({super.key, required this.meal, required this.handleFav});
+class DishDetails extends ConsumerStatefulWidget {
+  const DishDetails({
+    super.key,
+    required this.meal,
+  });
 
-  final void Function(Meal meal, bool isFav) handleFav;
   final Meal meal;
   @override
-  State<StatefulWidget> createState() {
+  ConsumerState<DishDetails> createState() {
     return _DishDetails(
       meal: meal,
-      handleFav: handleFav,
     );
   }
 }
 
-class _DishDetails extends State<DishDetails> {
-  _DishDetails({required this.meal, required this.handleFav});
+class _DishDetails extends ConsumerState<DishDetails> {
+  _DishDetails({required this.meal});
 
-  final void Function(Meal meal, bool isFav) handleFav;
   final Meal meal;
   var isFav = false;
-  Widget starIcon = Icon(Icons.star_purple500);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,18 +31,15 @@ class _DishDetails extends State<DishDetails> {
         actions: [
           IconButton(
               onPressed: () {
-                handleFav(meal, isFav);
                 setState(() {
-                  if (isFav) {
-                    starIcon = Icon(Icons.star_purple500);
-                    // isFav = false;
-                  } else {
-                    starIcon = Icon(Icons.star);
-                    // isFav = true;
-                  }
+                  isFav = ref
+                      .read(favouritesProvider.notifier)
+                      .toggleFavourites(meal);
                 });
               },
-              icon: starIcon)
+              icon: isFav
+                  ? const Icon(Icons.star)
+                  : const Icon(Icons.star_outline))
         ],
       ),
       body: SingleChildScrollView(
