@@ -12,7 +12,7 @@ class DishDetails extends ConsumerStatefulWidget {
   final Meal meal;
   @override
   ConsumerState<DishDetails> createState() {
-    return  _DishDetails(
+    return _DishDetails(
       meal: meal,
     );
   }
@@ -22,9 +22,12 @@ class _DishDetails extends ConsumerState<DishDetails> {
   _DishDetails({required this.meal});
 
   final Meal meal;
-  var isFav = false;
+  // var isFav = false;
+
   @override
   Widget build(BuildContext context) {
+    final favouritesList = ref.watch(favouritesProvider);
+    final isFav = favouritesList.contains(meal);
     return Scaffold(
       appBar: AppBar(
         title: Text(meal.title),
@@ -32,9 +35,7 @@ class _DishDetails extends ConsumerState<DishDetails> {
           IconButton(
               onPressed: () {
                 setState(() {
-                  isFav = ref
-                      .read(favouritesProvider.notifier)
-                      .toggleFavourites(meal);
+                  ref.read(favouritesProvider.notifier).toggleFavourites(meal);
                 });
               },
               icon: isFav
