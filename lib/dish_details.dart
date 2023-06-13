@@ -12,7 +12,7 @@ class DishDetails extends ConsumerStatefulWidget {
   final Meal meal;
   @override
   ConsumerState<DishDetails> createState() {
-    return _DishDetails(
+    return  _DishDetails(
       meal: meal,
     );
   }

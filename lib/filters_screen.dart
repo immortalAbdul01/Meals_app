@@ -2,21 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:to_do/main.dart';
 import 'package:to_do/main_drawer.dart';
 import 'package:to_do/tabs_screen.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:to_do/providers/filters_provider.dart';
 
 enum Filters { glutten, lactose, vegetarian, vegan }
 
-class FilterScreen extends StatefulWidget {
-  const FilterScreen({super.key, required this.currentFilters});
-
-  final Map<Filters, bool> currentFilters;
+class FilterScreen extends ConsumerStatefulWidget {
+  const FilterScreen({super.key});
 
   @override
-  State<StatefulWidget> createState() {
+  ConsumerState<FilterScreen> createState() {
     return _FilterScreen();
   }
 }
 
-class _FilterScreen extends State<FilterScreen> {
+class _FilterScreen extends ConsumerState<FilterScreen> {
   var gluttenFree = false;
   var LactoseFree = false;
   var Vegetarian = false;
@@ -24,11 +24,13 @@ class _FilterScreen extends State<FilterScreen> {
 
   @override
   void initState() {
+    final activeFilters = ref.read(filtersProvider);
     super.initState();
-    gluttenFree = widget.currentFilters[Filters.glutten]!;
-    LactoseFree = widget.currentFilters[Filters.lactose]!;
-    Vegetarian = widget.currentFilters[Filters.vegetarian]!;
-    Veganfree = widget.currentFilters[Filters.vegan]!;
+
+    gluttenFree = activeFilters[Filter.glutten]!;
+    LactoseFree = activeFilters[Filter.lactose]!;
+    Vegetarian = activeFilters[Filter.vegetarian]!;
+    Veganfree = activeFilters[Filter.vegan]!;
   }
 
   @override
@@ -39,14 +41,15 @@ class _FilterScreen extends State<FilterScreen> {
         children: [
           WillPopScope(
             onWillPop: () async {
-              Navigator.of(context).pop({
-                Filters.glutten: gluttenFree,
-                Filters.lactose: LactoseFree,
-                Filters.vegetarian: Vegetarian,
-                Filters.vegan: Veganfree
+              ref.read(filtersProvider.notifier).setFilters({
+                Filter.glutten: gluttenFree,
+                Filter.lactose: LactoseFree,
+                Filter.vegetarian: Vegetarian,
+                Filter.vegan: Veganfree
               });
+              Navigator.of(context).pop();
 
-              return false;
+              return true;
             },
             child: (SwitchListTile(
               value: gluttenFree,
