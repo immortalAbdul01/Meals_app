@@ -38,14 +38,24 @@ class _DishDetails extends ConsumerState<DishDetails> {
                   ref.read(favouritesProvider.notifier).toggleFavourites(meal);
                 });
               },
-              icon: isFav
-                  ? const Icon(Icons.star)
-                  : const Icon(Icons.star_outline))
+              icon: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 300),
+                  transitionBuilder: ((child, animation) {
+                    return RotationTransition(
+                      turns:
+                          Tween<double>(begin: 0.8, end: 1).animate(animation),
+                      child: child,
+                    );
+                  }),
+                  child: Icon(
+                    isFav ? Icons.star : Icons.star_border,
+                    key: ValueKey(isFav),
+                  )))
         ],
       ),
       body: SingleChildScrollView(
         child: (Column(children: [
-          Image.network(meal.imageUrl),
+          Hero(tag: meal.id, child: Image.network(meal.imageUrl)),
           Text(
             'Steps :',
             maxLines: 3,
